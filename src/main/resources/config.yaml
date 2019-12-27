@@ -14,10 +14,6 @@ kumuluzee:
     checks:
       etcd-health-check:
         connection-url: http://etcd:2379/health
-  metrics:
-    web-instrumentation:
-      - name: users-endpoint
-        url-pattern: /v1/users/*
   logs:
     config-file: '<?xml version="1.0" encoding="UTF-8"?>
                   <Configuration name="image-processing">
@@ -37,13 +33,28 @@ kumuluzee:
                       </Root>
                     </Loggers>
                   </Configuration>'
-
-configuration-properties:
-  demo-etcd-parameter: file
-  demo-service-is-healthy: true
-  db-url: jdbc:mysql://10.67.0.3:3306/image-processing
-  db-user: root
-  db-password: lPKKoBPxlnzhkkrn
-  gcp-project: grmek-rso
-  gcp-key: <hidden>
-  gcp-storage-bucket: grmek-rso-storage-bucket
+  streaming:
+    kafka:
+      producer:
+        bootstrap-servers: omnibus-01.srvs.cloudkafka.com:9094
+        acks: all
+        retries: 0
+        batch-size: 16384
+        linger-ms: 1
+        buffer-memory: 33554432
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.apache.kafka.common.serialization.StringSerializer
+        security-protocol: SASL_SSL
+        sasl-mechanism: SCRAM-SHA-256
+        sasl-jaas-config: 'org.apache.kafka.common.security.scram.ScramLoginModule required username="ptjc95jg" password="<hidden>";'
+      consumer:
+        bootstrap-servers: omnibus-01.srvs.cloudkafka.com:9094
+        group-id: group1
+        enable-auto-commit: true
+        auto-commit-interval-ms: 1000
+        auto-offset-reset: earliest
+        key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        security-protocol: SASL_SSL
+        sasl-mechanism: SCRAM-SHA-256
+        sasl-jaas-config: 'org.apache.kafka.common.security.scram.ScramLoginModule required username="ptjc95jg" password="<hidden>";'

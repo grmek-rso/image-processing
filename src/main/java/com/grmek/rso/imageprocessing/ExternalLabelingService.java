@@ -2,11 +2,12 @@ package com.grmek.rso.imageprocessing;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import javax.enterprise.context.ApplicationScoped;
 
-public class ExternalApi {
+@ApplicationScoped
+public class ExternalLabelingService {
 
-    public static String getLabels(String url) {
+    public String getLabels(String url) {
         try {
             HttpResponse<String> response = Unirest
                     .post("https://image-labeling1.p.rapidapi.com/img/label")
